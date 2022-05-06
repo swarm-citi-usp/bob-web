@@ -69,13 +69,13 @@ def use():
 
         if candidate_dict["remoteAgent"]["serviceDescription"]["@type"] == "swarm:camera":
             resp, jpg_as_text = run_frame(candidate, operation)
-
+            print(type(jpg_as_text))
         else:
             resp, jpg_as_text = run(candidate, operation)
 
     # data = cbor2.loads(resp["payload"])["value"]
     # return jsonify({data: data}, resp["status"])
-    return jsonify({data: jpg_as_text})
+    return jsonify({"data": jpg_as_text})
 
 
 def run(candidate, operation):

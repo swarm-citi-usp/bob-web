@@ -5,6 +5,7 @@ function Container() {
   const [queryType, setQueryType] = useState("swarm:lamp");
   const [queryOperation, setQueryOperation] = useState("readOperation");
   const [discoveryResult, setDiscoveryResult] = useState({ candidates: [] });
+  const [img, setImg] = useState("");
 
   const test = () => {
     console.log(queryType);
@@ -27,7 +28,7 @@ function Container() {
         candidate: candidate,
         operation: operation,
       })
-      .then(({ data }) => console.log(data));
+      .then(({ data }) => setImg(data.data));
   };
 
   return (
@@ -75,6 +76,9 @@ function Container() {
             )}
           </div>
         ))}
+      </div>
+      <div className="row">
+        <img className="col s6" src={`data:image/jpeg;base64, ${img}`}></img>
       </div>
     </div>
   );
