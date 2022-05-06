@@ -4,6 +4,7 @@ import axios from "axios";
 function Container() {
   const [queryType, setQueryType] = useState("swarm:lamp");
   const [queryOperation, setQueryOperation] = useState("readOperation");
+  const [discoveryResult, setDiscoveryResult] = useState({ candidates: [] });
 
   const test = () => {
     console.log(queryType);
@@ -13,10 +14,19 @@ function Container() {
 
   const discover = () => {
     axios
-      .post(
-        "http://localhost:8975/discovery",
-        { type: queryType, operation: queryOperation }
-      )
+      .post("http://localhost:5022/discovery", {
+        type: queryType,
+        operation: queryOperation,
+      })
+      .then(({ data }) => setDiscoveryResult(data));
+  };
+
+  const use = (candidate, operation) => {
+    axios
+      .post("http://localhost:5022/use", {
+        candidate: candidate,
+        operation: operation,
+      })
       .then(({ data }) => console.log(data));
   };
 
@@ -50,7 +60,21 @@ function Container() {
         </a>
       </div>
       <div className="row">
-        <p> {test} </p>
+        {discoveryResult.candidates.map((candidate, index1) => (
+          <div>
+            {candidate.remoteAgent.serviceDescription.operations.map(
+              (op, index2) => (
+                <a
+                  key={"" + index1 + index2}
+                  className="waves-effect waves-light btn"
+                  onClick={() => use(candidate, op)}
+                >
+                  {candidate.remoteAgent.didDocument.id + " " + op.returns}
+                </a>
+              )
+            )}
+          </div>
+        ))}
       </div>
     </div>
   );
