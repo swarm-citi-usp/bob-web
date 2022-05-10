@@ -41,9 +41,9 @@ def discovery():
     operation = data.get("operation", "")
 
     if operation == "":
-        query = {"@type": type_, "minCandidates": 1}
+        query = {"@type": type_, "minCandidates": 10}
     else:
-        query = {"@type": type_, "operation": {"@type": operation}, "minCandidates": 1}
+        query = {"@type": type_, "operation": {"@type": operation}, "minCandidates": 10}
 
     discovery_result = bob.discover(query)
     print(discovery_result)

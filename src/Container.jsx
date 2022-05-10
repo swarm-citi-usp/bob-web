@@ -3,7 +3,7 @@ import axios from "axios";
 
 function Container() {
   const [queryType, setQueryType] = useState("swarm:lamp");
-  const [queryOperation, setQueryOperation] = useState("readOperation");
+  const [queryOperation, setQueryOperation] = useState("updateOperation");
   const [discoveryResult, setDiscoveryResult] = useState({ candidates: [] });
   const [img, setImg] = useState("");
 
@@ -61,19 +61,29 @@ function Container() {
         </a>
       </div>
       <div className="row">
+
         {discoveryResult.candidates.map((candidate, index1) => (
-          <div>
-            {candidate.remoteAgent.serviceDescription.operations.map(
-              (op, index2) => (
-                <a
-                  key={"" + index1 + index2}
-                  className="waves-effect waves-light btn"
-                  onClick={() => use(candidate, op)}
-                >
-                  {candidate.remoteAgent.didDocument.id + " " + op.returns}
-                </a>
-              )
-            )}
+          <div className="col s12 m6">
+            <div className="card horizontal">
+              <div className="card-stacked">
+                <div className="card-content">
+                  <h5>{candidate.remoteAgent.didDocument.id}</h5>
+                </div>
+                {candidate.remoteAgent.serviceDescription.operations.map(
+                  (op, index2) => (
+                    <div className="card-action">
+                      <a
+                        key={"" + index1 + index2}
+                        className="waves-effect waves-light btn"
+                        onClick={() => use(candidate, op)}
+                      >
+                        {op.returns}
+                      </a>
+                    </div>
+                  )
+                )}
+              </div>
+            </div>
           </div>
         ))}
       </div>
