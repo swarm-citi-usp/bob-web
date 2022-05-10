@@ -5,21 +5,24 @@ function Container() {
   const [queryType, setQueryType] = useState("swarm:lamp");
   const [queryOperation, setQueryOperation] = useState("updateOperation");
   const [discoveryResult, setDiscoveryResult] = useState({ candidates: [] });
+  const [loading, setLoading] = useState(false);
   const [img, setImg] = useState("");
 
-  const test = () => {
-    console.log(queryType);
-    console.log(queryOperation);
-    // axios.get('http://localhost:8975/test').then(({data})=> console.log(data));
+  const clearState = () => {
+    setDiscoveryResult({ candidates: [] });
+    setImg("");
   };
 
   const discover = () => {
+    clearState();
+    setLoading(true);
     axios
       .post("http://localhost:5022/discovery", {
         type: queryType,
         operation: queryOperation,
       })
-      .then(({ data }) => setDiscoveryResult(data));
+      .then(({ data }) => setDiscoveryResult(data))
+      .finally(() => setLoading(false));
   };
 
   const use = (candidate, operation) => {
@@ -60,8 +63,14 @@ function Container() {
           Discover
         </a>
       </div>
+      {loading && (
+        <div className="row">
+          <div class="progress">
+            <div class="indeterminate"></div>
+          </div>
+        </div>
+      )}
       <div className="row">
-
         {discoveryResult.candidates.map((candidate, index1) => (
           <div className="col s12 m6">
             <div className="card horizontal">
@@ -87,9 +96,11 @@ function Container() {
           </div>
         ))}
       </div>
-      <div className="row">
-        <img className="col s6" src={`data:image/jpeg;base64, ${img}`}></img>
-      </div>
+      {img !== "" && (
+        <div className="row">
+          <img className="col s6" src={`data:image/jpeg;base64, ${img}`}></img>
+        </div>
+      )}
     </div>
   );
 }
